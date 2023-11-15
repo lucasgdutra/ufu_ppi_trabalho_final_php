@@ -1,3 +1,7 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+} ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -42,26 +46,40 @@
                         <a class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/sobre') === 0) ? 'active' : ''; ?>" href="/sobre">Sobre</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav mb-2 mb-lg-0 justify-content-end">
-                    <li class="dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Usuário
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/admin">Admin</a></li>
+                <?php if (isset($_SESSION['user_name'])) { ?>
+                    <ul class="navbar-nav mb-2 mb-lg-0 justify-content-end">
+                        <li class="dropdown">
 
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="/login">Login</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#">Logout</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                            <!-- If a user is logged in, display the username -->
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?php echo htmlspecialchars($_SESSION['user_name']); ?>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <?php if (isset($_SESSION['user_is_admin']) && $_SESSION['user_is_admin']) : ?>
+                                    <li><a class="dropdown-item" href="/admin">Admin</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider" />
+                                    </li>
+                                <?php endif; ?>
+
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+
+
+                        </li>
+                    </ul>
+                <?php } else { ?>
+                    <!-- If no user is logged in, show link to the login page -->
+
+                    <ul class="navbar-nav mb-2 mb-lg-0 justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login" role="button" aria-expanded="false">
+                                Login
+                            </a>
+                        </li>
+                    </ul>
+                <?php } ?>
+
             </div>
         </div>
     </nav>
