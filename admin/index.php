@@ -1,11 +1,13 @@
 <?php
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+  session_start();
+}
 
-// if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
-//   // Redirect to login page or show an error message
-//   header('Location: /login');
-//   exit;
-// }
+if (!isset($_SESSION['user_is_admin']) || $_SESSION['user_is_admin'] !== true) {
+  // Redirect to login page or show an error message
+  header('Location: /jogos');
+  exit;
+}
 ?>
 
 <?php
