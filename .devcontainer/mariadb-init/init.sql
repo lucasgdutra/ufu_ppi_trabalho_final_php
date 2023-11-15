@@ -34,3 +34,34 @@ INSERT INTO mariadb.usuarios (nome,senha,pontos,email,imagem,isAdmin,recorde_seg
 	 ('Mark',NULL,40,'mark@mail.com',NULL,0,86),
 	 ('Jacob',NULL,30,'jacob@mail.com',NULL,0,90),
 	 ('Larry',NULL,20,'larry@mail.com',NULL,0,95);
+
+-- mariadb.jogos definition
+
+CREATE TABLE `jogos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) DEFAULT NULL,
+  `dificuldade` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- mariadb.relacoes_animais_jogos definition
+
+CREATE TABLE `relacoes_animais_jogos` (
+  `id_animal` int(11) NOT NULL,
+  `id_jogo` int(11) NOT NULL,
+  PRIMARY KEY (`id_animal`,`id_jogo`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+INSERT INTO mariadb.jogos (nome,dificuldade) VALUES
+	 ('variados','fácil'),
+	 ('teste','médio');
+
+INSERT INTO mariadb.relacoes_animais_jogos (id_animal,id_jogo) VALUES
+	 (7,1),
+	 (7,2),
+	 (8,1),
+	 (8,2),
+	 (9,1),
+	 (10,1),
+	 (11,1),
+	 (12,1);
