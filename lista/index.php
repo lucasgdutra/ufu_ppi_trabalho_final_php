@@ -10,7 +10,7 @@ try {
   $conn = $database->getConnection();
 
   // SQL query to fetch data from animals table
-  $sql = "SELECT * FROM animais";
+  $sql = "SELECT * FROM animais order by nome";
   $stmt = $conn->prepare($sql);
   $stmt->execute();
 
