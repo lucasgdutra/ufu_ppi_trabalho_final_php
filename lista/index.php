@@ -45,7 +45,7 @@ include '../includes/navbar.php';
         <div class="card mb-3">
           <div class="row g-0 h-100">
             <div class="col-md-4 h-100">
-              <img src="/img/<?= $animal['imagem_url'] ?>-grande.webp" class="img-fluid rounded-start" alt="imagem de <?= $animal['nome'] ?>" width="450" height="300" loading="lazy" decoding="async" />
+              <img src="/img/animais/<?= $animal['imagem_url'] ?>-grande.webp" class="img-fluid rounded-start" alt="imagem de <?= $animal['nome'] ?>" width="450" height="300" loading="lazy" decoding="async" />
             </div>
             <div class="col-md-8">
               <div class="card-body">

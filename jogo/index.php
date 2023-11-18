@@ -54,7 +54,7 @@ include '../includes/navbar.php'; ?>
       <div class="flip-card">
         <div class="card flip-card-inner" data-animal-id="<?= $animal['nome'] ?>">
           <div class="flip-card-back">
-            <img src="/img/<?= $animal['imagem_url'] ?>-pequeno.webp" class="card-img-top" alt="imagem de <?= $animal['nome'] ?>" width="333" height="250" loading="lazy" decoding="async" />
+            <img src="/img/animais/<?= $animal['imagem_url'] ?>-pequeno.webp" class="card-img-top" alt="imagem de <?= $animal['nome'] ?>" width="333" height="250" loading="lazy" decoding="async" />
             <div class="card-body p-1 pt-0">
               <h5 class="card-title"><?= $animal['nome'] ?></h5>
               <h6 class="card-subtitle mb-2 text-muted"><?= $animal['nome_cientifico'] ?></h6>
