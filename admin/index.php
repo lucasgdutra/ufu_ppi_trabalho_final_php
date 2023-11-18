@@ -8,11 +8,32 @@ if (!isset($_SESSION['user_is_admin']) || $_SESSION['user_is_admin'] !== true) {
   header('Location: /jogos');
   exit;
 }
-?>
 
-<?php
+require_once "../classes/Database.php";
+
+$database = new Database('mysql');
+$conn = $database->getConnection();
+
+
+$usersSql = "SELECT id, nome FROM usuarios order by nome asc";
+$stmt = $conn->prepare($usersSql);
+$stmt->execute();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+$animaisSql = "SELECT id, nome FROM animais order by nome asc";
+$stmt = $conn->prepare($animaisSql);
+$stmt->execute();
+$animais = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$jogosSql = "SELECT id, nome FROM jogos order by nome asc";
+$stmt = $conn->prepare($jogosSql);
+$stmt->execute();
+$jogos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 $links = ["/css/admin.css"];
-include '../includes/navbar.php'; ?>
+include '../includes/navbar.php';
+?>
 <main class="container">
   <div class="container mt-5">
     <h2 class="mb-3">Usuários</h2>
@@ -67,33 +88,16 @@ include '../includes/navbar.php'; ?>
         </tr>
       </thead>
       <tbody id="user-table">
-        <tr>
-          <th scope="row">1</th>
-
-          <td>Mark</td>
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-
-          <td>Jacob</td>
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-
-          <td>Larry</td>
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
+        <?php foreach ($users as $user) : ?>
+          <tr>
+            <th scope="row"><?php echo htmlspecialchars($user['id']); ?></th>
+            <td><?php echo htmlspecialchars($user['nome']); ?></td>
+            <td>
+              <button class="btn btn-secondary btn-sm me-2">Editar</button>
+              <button class="btn btn-danger btn-sm">Deletar</button>
+            </td>
+          </tr>
+        <?php endforeach; ?>
       </tbody>
     </table>
 
@@ -160,60 +164,16 @@ include '../includes/navbar.php'; ?>
         </tr>
       </thead>
       <tbody id="animals-table">
-        <tr>
-          <th scope="row">1</th>
-          <td>onça</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>tucano</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>boto-cor-de-rosa</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">4</th>
-          <td>jabuti</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">5</th>
-          <td>arara-azul</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">6</th>
-          <td>pirarucu</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
+        <?php foreach ($animais as $animal) : ?>
+          <tr>
+            <th scope="row"><?php echo htmlspecialchars($animal['id']); ?></th>
+            <td><?php echo htmlspecialchars($animal['nome']); ?></td>
+            <td>
+              <button class="btn btn-secondary btn-sm me-2">Editar</button>
+              <button class="btn btn-danger btn-sm">Deletar</button>
+            </td>
+          </tr>
+        <?php endforeach; ?>
       </tbody>
     </table>
 
@@ -246,41 +206,15 @@ include '../includes/navbar.php'; ?>
             </div>
             <div class="mb-3 container">
               <label for="Animais" class="form-label">Animais</label>
-              <div class="row flex-wrap">
-                <div class="form-check form-switch col">
-                  <input class="form-check-input" type="checkbox" value="onça" role="switch" name="animais[]" />
-                  <label class="form-check-label" for="onça"> onça </label>
-                </div>
-                <div class="form-check form-switch col">
-                  <input class="form-check-input" type="checkbox" value="tucano" role="switch" name="animais[]" />
-                  <label class="form-check-label" for="tucano">
-                    tucano
-                  </label>
-                </div>
-                <div class="form-check form-switch col">
-                  <input class="form-check-input" type="checkbox" value="boto-cor-de-rosa" role="switch" name="animais[]" />
-                  <label class="form-check-label" for="boto-cor-de-rosa">
-                    boto-cor-de-rosa
-                  </label>
-                </div>
-                <div class="form-check form-switch col">
-                  <input class="form-check-input" type="checkbox" value="jabuti" role="switch" name="animais[]" />
-                  <label class="form-check-label" for="jabuti">
-                    jabuti
-                  </label>
-                </div>
-                <div class="form-check form-switch col">
-                  <input class="form-check-input" type="checkbox" value="arara-azul" role="switch" name="animais[]" />
-                  <label class="form-check-label" for="arara-azul">
-                    arara-azul
-                  </label>
-                </div>
-                <div class="form-check form-switch col">
-                  <input class="form-check-input" type="checkbox" value="pirarucu" role="switch" name="animais[]" />
-                  <label class="form-check-label" for="pirarucu">
-                    pirarucu
-                  </label>
-                </div>
+              <div class="row">
+                <?php foreach ($animais as $animal) : ?>
+
+
+                  <div class="form-check form-switch col-12 col-sm-6 col-md-4 col-xl-3 text-truncate">
+                    <input class="form-check-input" type="checkbox" value="<?php echo htmlspecialchars($animal['nome']); ?>" role="switch" name="animais[]" />
+                    <label class="form-check-label " for="<?php echo htmlspecialchars($animal['nome']); ?>"><?php echo htmlspecialchars($animal['nome']); ?></label>
+                  </div>
+                <?php endforeach; ?>
               </div>
             </div>
             <button type="submit" class="btn btn-outline-success">
@@ -305,105 +239,17 @@ include '../includes/navbar.php'; ?>
         </tr>
       </thead>
       <tbody id="animals-table">
-        <tr>
-          <th scope="row">1</th>
-          <td>Animais Variados</td>
+        <?php foreach ($jogos as $jogo) : ?>
+          <tr>
+            <th scope="row"><?php echo htmlspecialchars($jogo['id']); ?> </th>
+            <td><?php echo htmlspecialchars($jogo['nome']); ?></td>
 
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Mamíferos</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Animais Aquáticos</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">4</th>
-          <td>Aves</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">5</th>
-          <td>Répteis</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">6</th>
-          <td>Anfíbios</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">7</th>
-          <td>Invertebrados</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">8</th>
-          <td>Animais de Estimação</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">9</th>
-          <td>Animais Selvagens</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">10</th>
-          <td>Animais Noturnos</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">11</th>
-          <td>Insetos</td>
-
-          <td>
-            <button class="btn btn-secondary btn-sm me-2">Editar</button>
-            <button class="btn btn-danger btn-sm">Deletar</button>
-          </td>
-        </tr>
+            <td>
+              <button class="btn btn-secondary btn-sm me-2">Editar</button>
+              <button class="btn btn-danger btn-sm">Deletar</button>
+            </td>
+          </tr>
+        <?php endforeach; ?>
       </tbody>
     </table>
   </div>

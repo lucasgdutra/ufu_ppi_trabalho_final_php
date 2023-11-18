@@ -16,7 +16,17 @@ try {
   $conn = $database->getConnection();
 
   // SQL query to fetch data from animals table
-  $sql = "SELECT * FROM jogos";
+  $sql = "SELECT
+    jogos.id,
+    jogos.nome,
+    dificuldade.nome as dificuldade
+  FROM
+    jogos
+  inner join dificuldade on
+    dificuldade.id = jogos.id_dificuldade
+  order by
+    dificuldade.id,
+    jogos.nome desc";
   $stmt = $conn->prepare($sql);
   $stmt->execute();
 
