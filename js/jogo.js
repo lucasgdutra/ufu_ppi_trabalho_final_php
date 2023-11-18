@@ -29,6 +29,33 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function updateGameResult(gamePoints, gameTime) {
+    const formData = new FormData();
+    formData.append('game_points', gamePoints);
+    formData.append('game_time', gameTime);
+
+    fetch('/jogo/atualizaScore.php', { // Update the path as needed
+      method: 'POST',
+      body: formData
+    })
+      .then(response => {
+        if (response.status === 401) {
+          throw new Error('Faça login para pontuar no ranking');
+        }
+        return response.text();
+      })
+      .then(result => alert(result))
+      .catch(error => {
+        console.error('Error:', error);
+        if (error.message === 'Faça login para pontuar no ranking') {
+          alert('Faça login para pontuar no ranking');
+        }
+      });
+  }
+
+
+
+
   function checkGameEnd() {
     const totalCards = document.querySelectorAll(".flip-card-inner").length;
     const blockedCards = document.querySelectorAll(
@@ -37,6 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (blockedCards === totalCards) {
       clearInterval(timerInterval); // Stop the timer
       alert("Jogo finalizado!"); // Alert the user
+      const gamePoints = Math.ceil(score - moves / 10); // Calculate the game points
+      updateGameResult(gamePoints, time);
     }
   }
 
@@ -77,23 +106,39 @@ document.addEventListener("DOMContentLoaded", () => {
         flippedCards = [];
       }
     }
+    checkGameEnd();
+  }
+
+  function flipAllCards() {
+    cards.forEach(card => card.classList.add('fliped'));
+  }
+
+  function unflipAllCards() {
+    cards.forEach(card => card.classList.remove('fliped'));
   }
 
   const cards = document.querySelectorAll(".flip-card-inner");
+
+
+
+  flipAllCards();
 
   if (cards) {
     cards.forEach((card) => {
       card.addEventListener("click", () => {
         flipCard(card);
-        checkGameEnd();
+
       });
     });
   }
 
-  timerInterval = setInterval(() => {
-    time++;
-    syncTime();
-  }, 1000);
+  setTimeout(() => {
+    unflipAllCards();
+    timerInterval = setInterval(() => {
+      time++;
+      syncTime();
+    }, 1000);
+  }, 1500);
 
   syncScore();
 });

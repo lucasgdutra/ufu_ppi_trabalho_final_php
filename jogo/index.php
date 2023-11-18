@@ -54,8 +54,8 @@ include '../includes/navbar.php'; ?>
       <div class="flip-card">
         <div class="card flip-card-inner" data-animal-id="<?= $animal['nome'] ?>">
           <div class="flip-card-back">
-            <img src="/img/animais/<?= $animal['imagem_url'] ?>-pequeno.webp" class="card-img-top" alt="imagem de <?= $animal['nome'] ?>" width="333" height="250" loading="lazy" decoding="async" />
-            <div class="card-body p-1 pt-0">
+            <img src="/img/animais/<?= $animal['imagem_url'] ?>-pequeno.webp" class="card-img-top" alt="imagem de <?= $animal['nome'] ?>" width="333" height="250" />
+            <div class="card-body p-1 pt-0 text-truncate">
               <h5 class="card-title"><?= $animal['nome'] ?></h5>
               <h6 class="card-subtitle mb-2 text-muted"><?= $animal['nome_cientifico'] ?></h6>
               <h6 class="card-subtitle mb-2 text-muted"><?= $animal['classe'] ?></h6>
@@ -63,9 +63,9 @@ include '../includes/navbar.php'; ?>
             </div>
           </div>
           <div class="flip-card-front d-flex flex-column justify-content-start">
-            <img src="/img/card-back.webp" class="card-img-top" alt="Desenho de verso da carta, contendo dois animais centralizados, onça pintada e arara azul, ao fundo uma floresta cortado por um rio" width="143" height="250" loading="lazy" decoding="async" />
+            <img src="/img/card-back.webp" class="card-img-top" alt="Desenho de verso da carta, contendo dois animais centralizados, onça pintada e arara azul, ao fundo uma floresta cortado por um rio" width="143" height="250" />
 
-            <span class="text-center text-wrap fs-5">(Clique para virar a carta)</span>
+            <!-- <span class="text-center text-wrap fs-5">(Clique para virar a carta)</span> -->
           </div>
         </div>
       </div>
