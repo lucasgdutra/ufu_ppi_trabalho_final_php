@@ -4,11 +4,25 @@ FROM mcr.microsoft.com/vscode/devcontainers/php:0-${VARIANT}
 
 # Install MariaDB client
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get install -y mariadb-client \ 
+    && apt-get install -y mariadb-client \
     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Install php-mysql driver
 RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+# Update package repository and install libraries for GD extension
+RUN apt-get update && apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+        libwebp-dev \
+        libxpm-dev \
+        zlib1g-dev
+
+# Reinstall GD extension
+RUN docker-php-ext-configure gd --enable-gd --with-webp --with-jpeg \
+    --with-xpm --with-freetype \
+    && docker-php-ext-install gd exif
 
 # [Choice] Node.js version: none, lts/*, 16, 14, 12, 10
 ARG NODE_VERSION="none"
