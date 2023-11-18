@@ -1,14 +1,42 @@
 <?php
 
-function convertToWebp($inputPath, $outputPath, $newWidth = null, $newHeight = null)
+function convertImage($inputPath, $outputPath, $outputFormat = 'webp', $newWidth = null, $newHeight = null)
 {
     // Check if the input file exists
     if (!file_exists($inputPath)) {
         return ['success' => false, 'error' => 'Input file does not exist'];
     }
 
-    // Load the original image
-    $originalImage = @imagecreatefromjpeg($inputPath);
+    // $imageType = exif_imagetype($inputPath);
+    // if (!$imageType) {
+    //     return ['success' => false, 'error' => 'Unsupported image type'];
+    // }
+
+    $imageInfo = getimagesize($inputPath);
+    if ($imageInfo === false) {
+        return ['success' => false, 'error' => 'Unsupported image type'];
+    }
+
+    $imageType = $imageInfo[2];
+
+    // Load the original image based on its type
+    switch ($imageType) {
+        case IMAGETYPE_JPEG:
+            $originalImage = imagecreatefromjpeg($inputPath);
+            break;
+        case IMAGETYPE_PNG:
+            $originalImage = imagecreatefrompng($inputPath);
+            break;
+        case IMAGETYPE_GIF:
+            $originalImage = imagecreatefromgif($inputPath);
+            break;
+        case IMAGETYPE_WEBP:
+            $originalImage = imagecreatefromwebp($inputPath);
+            break;
+        default:
+            return ['success' => false, 'error' => 'Unsupported image type'];
+    }
+
     if (!$originalImage) {
         return ['success' => false, 'error' => 'Failed to load the original image'];
     }
@@ -43,16 +71,27 @@ function convertToWebp($inputPath, $outputPath, $newWidth = null, $newHeight = n
         return ['success' => false, 'error' => 'Failed to resize the image'];
     }
 
-    // Convert to WebP
-    if (!imagewebp($newImage, $outputPath)) {
-        imagedestroy($originalImage);
-        imagedestroy($newImage);
-        return ['success' => false, 'error' => 'Failed to convert the image to WebP'];
+    // Convert to specified format
+    $conversionSuccess = false;
+    switch (strtolower($outputFormat)) {
+        case 'webp':
+            $conversionSuccess = imagewebp($newImage, $outputPath);
+            break;
+        case 'jpg':
+        case 'jpeg':
+            $conversionSuccess = imagejpeg($newImage, $outputPath);
+            break;
+        default:
+            return ['success' => false, 'error' => 'Unsupported output format'];
     }
 
     // Free up memory
     imagedestroy($originalImage);
     imagedestroy($newImage);
+
+    if (!$conversionSuccess) {
+        return ['success' => false, 'error' => 'Failed to convert the image'];
+    }
 
     // Return success
     return ['success' => true, 'error' => null];

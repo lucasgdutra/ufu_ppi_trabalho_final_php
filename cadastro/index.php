@@ -5,7 +5,7 @@ include '../includes/navbar.php'; ?>
   <form id="form-login" action="handleForm.php" method="POST" enctype="multipart/form-data">
     <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label">Endereço de e-mail</label>
-      <input type="email" class="form-control" id="email" required />
+      <input type="email" class="form-control" id="email" name="email" required />
     </div>
     <div class="mb-3">
       <label for="nome" class="form-label">Nome</label>
@@ -13,11 +13,11 @@ include '../includes/navbar.php'; ?>
     </div>
     <div class="mb-3">
       <label for="exampleInputPassword1" class="form-label">Senha</label>
-      <input type="password" class="form-control" id="password" required />
+      <input type="password" class="form-control" id="password" name="password" required />
     </div>
     <div class="mb-3">
       <label for="profilePhoto" class="form-label">Foto de perfil</label>
-      <input class="form-control" type="file" id="profilePhoto" />
+      <input class="form-control" type="file" id="profilePhoto" name="profilePhoto" />
     </div>
 
     <button type="submit" class="btn btn-primary">Criar conta</button>

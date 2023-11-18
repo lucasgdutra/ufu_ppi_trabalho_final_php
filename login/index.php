@@ -44,6 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Password is correct, start a session
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['nome'];
+        $_SESSION['profile_photo_path'] = $user['caminho_imagem'];
         $_SESSION['user_is_admin'] = (bool)$user['isAdmin'];
         // Redirect to a logged-in page
         header("Location: /jogos");

@@ -52,7 +52,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
                             <!-- If a user is logged in, display the username -->
                             <a class="nav-link dropdown-toggle py-0" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="<?php echo $_SESSION['profile_photo_path'] != null ? $_SESSION['profile_photo_path'] : "/img/avatar.webp"; ?>" class="img-fluid rounded" alt="foto de perfil" height="40" width="40" loading="lazy" decoding="async" id="profilePhoto">
+                                <img src="<?php echo $_SESSION['profile_photo_path'] != null ? $_SESSION['profile_photo_path'] . ".webp" : "/img/avatar.webp"; ?>" class="img-fluid rounded" alt="foto de perfil" height="40" width="40" loading="lazy" decoding="async" id="profilePhoto">
 
                                 <?php echo htmlspecialchars($_SESSION['user_name']); ?>
 
