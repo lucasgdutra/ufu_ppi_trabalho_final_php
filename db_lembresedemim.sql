@@ -1,0 +1,1 @@
+.devcontainer/mariadb-init/init.sql
