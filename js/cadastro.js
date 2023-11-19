@@ -6,23 +6,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
     var formData = new FormData(document.getElementById('form-login'));
 
-    fetch('/cadastro/handleForm.php', {
+    fetch('/admin/usuarios/addUser.php', {
       method: 'POST',
       body: formData
     })
-      .then(response => response.text())
+      .then(response => {
+        if (response.ok) {
+          if (response.status === 201) {
+            alert("Cadastro feito com sucesso");
+          }
+          return response.text();
+        } else {
+          switch (response.status) {
+            case 400:
+              alert("Requisição inválida. Por favor, verifique os dados e tente novamente.");
+              break;
+            case 401:
+              alert("Não autorizado. Faça login e tente novamente.");
+              break;
+            case 405:
+              alert("Método não permitido. Verifique o método da requisição.");
+              break;
+            case 409:
+              alert("Conflito. Usuário já existe.");
+              break;
+            case 500:
+              alert("Erro interno do servidor. Tente novamente mais tarde.");
+              break;
+            default:
+              alert("Ocorreu um erro. Tente novamente mais tarde.");
+          }
+          throw new Error('HTTP status ' + response.status);
+        }
+      })
       .then(data => {
-        console.log(data);
-        alert("Cadastro feito com sucesso") // Handle the response data
-        // You can also update the UI here to show success or error messages
+        console.log(data); // You can handle the data/response further here
       })
       .catch(error => {
         console.error('Error:', error);
-        alert("Erro ao realizar cadastro")
+        // You can also update the UI here to show error messages
       });
   });
 });
-
-
-
-

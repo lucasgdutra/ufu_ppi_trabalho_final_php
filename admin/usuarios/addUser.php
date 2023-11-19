@@ -1,10 +1,37 @@
 <?php
-require_once "../classes/Database.php";
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once "../../classes/Database.php";
+
+
+
+function addUser($email, $nome, $hashedPassword, $photoPath, $isAdmin = false)
+{
+    global $conn;
+    // Assuming a table `users` with columns `email`, `nome`, `senha`, `profilePhoto`, `isAdmin`
+    $sql = "INSERT INTO usuarios (nome, senha, email, caminho_imagem, isAdmin) VALUES (:nome, :senha, :email, :imagem, :isAdmin)";
+
+    try {
+        $isAdmin = $isAdmin ? 1 : 0;
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':senha', $hashedPassword);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':imagem', $photoPath);
+        $stmt->bindParam(':isAdmin', $isAdmin);
+        $stmt->execute();
+        return true;
+    } catch (PDOException $e) {
+        throw $e;
+    }
+}
 
 function uploadProfilePhoto($file)
 {
-    $target_dir = "../img/profile_photos/"; // Ensure this path is correct relative to your script's location
-    $fileType = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $target_dir = "../../img/profile_photos/"; // Ensure this path is correct relative to your script's location
+
 
     // Validate file is an image
     if ($file['error']) {
@@ -24,7 +51,7 @@ function uploadProfilePhoto($file)
     $targetFileWebP = $target_dir . $baseFileName . '.webp';
     $targetFileJPG = $target_dir . $baseFileName . '.jpg';
 
-    require_once "../utils/convertImage.php";
+    require_once "../../utils/convertImage.php";
 
     // Convert to WebP
     $resultWebP = convertImage($file['tmp_name'], $targetFileWebP, 'webp', null, 40);
@@ -42,16 +69,37 @@ function uploadProfilePhoto($file)
 
 
 
-    return str_replace('../', '/', $target_dir . $baseFileName);
+    return str_replace('//', '/', str_replace('../', '/', $target_dir . $baseFileName));
 }
 
+function checkIfUserExists($email)
+{
+    global $conn;
+    $sql = "SELECT * FROM usuarios WHERE email = :email";
 
+    try {
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    } catch (PDOException $e) {
+        throw $e;
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $database = new Database('mysql');
+    $conn = $database->getConnection();
+
     $email = $_POST['email'] ?? '';
     $nome = $_POST['nome'] ?? '';
     $senha = $_POST['senha'] ?? '';
     $profilePhoto = $_FILES['profilePhoto'] ?? null;
+    if (isset($_SESSION['user_is_admin']) && $_SESSION['user_is_admin'] === true) {
+        $isAdmin = $_POST['isAdmin'] ?? false;
+    } else {
+        $isAdmin = false;
+    }
 
     if (empty($email) || empty($nome) || empty($senha)) {
         http_response_code(400); // Bad Request
@@ -60,15 +108,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     try {
-        $database = new Database('mysql');
-        $conn = $database->getConnection();
-
         // Check if user already exists
-        $checkUserStmt = $conn->prepare("SELECT * FROM usuarios WHERE email = :email");
-        $checkUserStmt->bindParam(':email', $email);
-        $checkUserStmt->execute();
-
-        if ($checkUserStmt->rowCount() > 0) {
+        if (checkIfUserExists($email)) {
             http_response_code(409); // Conflict
             echo "User already exists with this email.";
             exit;
@@ -77,21 +118,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $photoPath = $profilePhoto ? uploadProfilePhoto($profilePhoto) : null;
         $hashedPassword = password_hash($senha, PASSWORD_DEFAULT);
 
-        $stmt = $conn->prepare("INSERT INTO usuarios (nome, senha, email, caminho_imagem) VALUES (:nome, :senha, :email, :imagem)");
-        $stmt->bindParam(':nome', $nome);
-        $stmt->bindParam(':senha', $hashedPassword);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':imagem', $photoPath);
-
-        if ($stmt->execute()) {
+        if (addUser($email, $nome, $hashedPassword, $photoPath, $isAdmin)) {
             http_response_code(201); // Created
             echo "User registered successfully";
         } else {
             http_response_code(500); // Internal Server Error
             echo "An error occurred while registering the user.";
         }
-
-        $database->closeConnection();
     } catch (\PDOException $e) {
         http_response_code(500); // Internal Server Error
         echo "Database error: " . $e->getMessage();

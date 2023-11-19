@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Include your database connection script
   require_once "../classes/Database.php";
   $email = $_POST['email'];
-  $password = $_POST['password'];
+  $password = $_POST['senha'];
 
   try {
     $database = new Database('mysql');
@@ -44,6 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Password is correct, start a session
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['nome'];
+        $_SESSION['user_email'] = $user['email'];
         $_SESSION['profile_photo_path'] = $user['caminho_imagem'];
         $_SESSION['user_is_admin'] = (bool)$user['isAdmin'];
         // Redirect to a logged-in page
@@ -83,8 +84,8 @@ include '../includes/navbar.php'; ?>
       <input type="email" class="form-control" id="email" name="email" />
     </div>
     <div class="mb-3">
-      <label for="exampleInputPassword1" class="form-label">Senha</label>
-      <input type="password" class="form-control" id="password" name="password" />
+      <label for="senha" class="form-label">Senha</label>
+      <input type="password" class="form-control" id="senha" name="senha" />
     </div>
     <div class="form-text">
       Não tem uma conta? Crie uma clicando

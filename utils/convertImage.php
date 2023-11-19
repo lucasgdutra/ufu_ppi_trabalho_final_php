@@ -58,14 +58,14 @@ function convertImage($inputPath, $outputPath, $outputFormat = 'webp', $newWidth
     }
 
     // Create a new image with new dimensions
-    $newImage = imagecreatetruecolor($newWidth, $newHeight);
+    $newImage = imagecreatetruecolor((int)$newWidth, (int)$newHeight);
     if (!$newImage) {
         imagedestroy($originalImage);
         return ['success' => false, 'error' => 'Failed to create a new image'];
     }
 
     // Copy and resize the original image onto the new image
-    if (!imagecopyresampled($newImage, $originalImage, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight)) {
+    if (!imagecopyresampled($newImage, $originalImage, 0, 0, 0, 0, (int)$newWidth, (int)$newHeight, (int)$originalWidth, (int)$originalHeight)) {
         imagedestroy($originalImage);
         imagedestroy($newImage);
         return ['success' => false, 'error' => 'Failed to resize the image'];

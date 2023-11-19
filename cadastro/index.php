@@ -12,12 +12,12 @@ include '../includes/navbar.php'; ?>
       <input type="text" class="form-control" name="nome" required />
     </div>
     <div class="mb-3">
-      <label for="exampleInputPassword1" class="form-label">Senha</label>
-      <input type="password" class="form-control" id="password" name="password" required />
+      <label for="senha" class="form-label">Senha</label>
+      <input type="password" class="form-control" id="senha" name="senha" required />
     </div>
     <div class="mb-3">
-      <label for="profilePhoto" class="form-label">Foto de perfil</label>
-      <input class="form-control" type="file" id="profilePhoto" name="profilePhoto" />
+      <label for="profilePhotoFile" class="form-label">Foto de perfil</label>
+      <input class="form-control" type="file" id="profilePhotoFile" name="profilePhoto" />
     </div>
 
     <button type="submit" class="btn btn-primary">Criar conta</button>
