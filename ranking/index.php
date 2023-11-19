@@ -52,7 +52,7 @@ try {
         echo "<th scope='row'>" . $position++ . "</th>";
         echo "<td>" . htmlspecialchars($usuario['nome']) . "</td>";
         echo "<td>" . $usuario['pontos'] . "</td>";
-        echo "<td>" . gmdate("i:s", $usuario['recorde_segundos']) . "</td>";
+        echo "<td>" . ($usuario['recorde_segundos'] != null ? gmdate("i:s", $usuario['recorde_segundos']) : '-') . "</td>";
         echo "</tr>";
       }
       ?>
