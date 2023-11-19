@@ -40,7 +40,7 @@
           <a href="/jogos" target="_blank">Lista de Jogos</a>
         </li>
         <li>
-          <a href="/jogos/variados" target="_blank">Jogo de exemplo</a>
+          <a href="/jogo?nome=teste" target="_blank">Jogo de exemplo</a>
         </li>
         <li>
           <a href="/lista" target="_blank">Lista de animais</a>
